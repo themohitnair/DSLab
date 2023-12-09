@@ -156,3 +156,8 @@ int main(void)
     scanf("%[^\n]", infix);
     printf("The postfix expression is: %s\n", infix_to_postfix(infix));
 }
+
+/*Output:
+Enter the infix expression: (a+b)^c/d-e*f
+The postfix expression is: ab+c^d/ef*-
+*/

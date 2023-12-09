@@ -95,6 +95,7 @@ int main(void)
     }
     printf("The state of the stack is: ");
     disp_stack(stack);
+    printf("\n");
 
     printf("Enter the number of elements to be popped: ");
     scanf("%d", &n);
@@ -103,5 +104,15 @@ int main(void)
     {
         printf("%c ", pop(stack));
     }
+    printf("\n");
     liberate_stack(stack);
 }
+
+/*Output:
+Enter the maximum size of the stack: 10     
+Enter the number of elements to be pushed into the stack: 7
+Enter the elements to be pushed into the stack: abcd:e,      
+The state of the stack is: a b c d : e , 
+Enter the number of elements to be popped: 2
+The popped elements are: , e 
+*/
