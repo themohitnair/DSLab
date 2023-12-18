@@ -30,14 +30,12 @@ bool check_underflow(STACK* stack)
 
 void push(STACK* stack, char item)
 {
-    if(!check_overflow(stack))
-        stack->ptr[++stack->top] = item;
-    else
+    if(check_overflow(stack))
     {
-        printf("Limit exceeded. Stack size has been increased by one.");
         stack->max_size += 1;
         stack->ptr = (char*)realloc(stack->ptr, (stack->max_size)*sizeof(char));
     }
+    stack->ptr[++stack->top] = item;
 }
 
 char pop(STACK* stack)

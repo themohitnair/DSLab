@@ -1,163 +1,89 @@
+#include "stackfuncs.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
-#include<stdbool.h>
-#include<string.h>
 #include<ctype.h>
+#include<string.h>
+#include<stdbool.h>
 
-typedef struct {
-    char* ptr;
-    int top;
-    int max;
-}CSTACK;
-
-CSTACK* create_stack(int max)
+int prec(char ops)
 {
-    CSTACK* st;
-    st = (CSTACK*)malloc(sizeof(CSTACK));
-    st->max = max;
-    st->top = -1;    
-    st->ptr = (char*)malloc(st->max*sizeof(char));
-    return st;
-}
-
-void liberate_stack(CSTACK* st)
-{
-    free(st->ptr);
-    free(st);
-}
-
-bool check_overflow(CSTACK* st)
-{
-    return (st->top == (st->max)-1);
-}
-
-bool check_underflow(CSTACK* st)
-{
-    return (st->top == -1);
-}
-
-void push(CSTACK* st, char item)
-{
-    if(check_overflow(st))
+    switch (ops)
     {
-        printf("Stack is full.");
-        exit(0);        
-    }
-    else
-    {        
-        st->ptr[++st->top] = item;
-    }
-}
-
-char pop(CSTACK* st)
-{
-    if(check_underflow(st)) 
-    {
-        printf("Stack is empty.");
-        exit(0);
-    }               
-    else
-    {
-        
-        return st->ptr[st->top--];
-    }
-}
-
-char peek(CSTACK* st)
-{
-    return st->ptr[st->top];
-}
-
-void disp_stack(CSTACK* st)
-{
-    for(int i = 0; i <= st->top; i++)
-    {
-        printf("%c ", st->ptr[i]);
-    }    
-}
-
-int prec(char op)
-{
-    switch (op)
-    {    
-        case '^': return 3;
         case '*':
         case '/': return 2;
         case '+':
-        case '-': return 1;
+        case '-': return 1;    
         default: return 0;
     }
 }
 
-bool is_operand(char o)
+bool is_operand(char ops)
 {
-    return isalnum(o);
+    return isalnum(ops);
 }
 
-bool is_operator(char op)
+bool is_operator(char ops)
 {
-    return !isalnum(op);
+    return !isalnum(ops);
 }
 
 char* infix_to_postfix(char* infix)
 {
-
-    //assignments and declarations
+    STACK* ops = create(10);
     char* postfix = (char*)malloc((strlen(infix)+1)*sizeof(char));
-    CSTACK* ops = create_stack(200);
     int postind = 0;
-
-    for(int i = 0; *(infix+i)!='\0'; i++)
+    for(int i=0;*(infix+i)!='\0';i++)
     {
-        char cur = *(infix+i);
-        if(is_operand(cur)) //alphanumerics directly added to postfix expression
+        char cur = infix[i];
+        if (is_operand(cur))        
         {
-            postfix[postind++] = cur; 
+            postfix[postind++] = cur;
         }
-        else if(cur == '(') //opening brace pushed into stack
+        else if(cur=='(')
         {
             push(ops, cur);
         }
-        else if(cur == ')') //all operators upto opening brace from encountering closing brace pushed into stack
+        else if(cur==')')
         {
             while(!check_underflow(ops) && peek(ops)!='(')
             {
                 postfix[postind++] = pop(ops);
-            }     
-            char g = pop(ops); //opening brace popped        
-        }    
-        else
+            }
+            char garbage = pop(ops);
+        }
+        else if(is_operator(cur))
         {
-            while(!check_underflow(ops) && prec(cur) <= prec(peek(ops))) //popping higher priority operators after comparing with current operator in infix
+            while((!check_underflow(ops)) && (prec(cur)<=prec(peek(ops)) && (peek(ops)!='(')))
             {
                 postfix[postind++] = pop(ops);
             }
-            push(ops, cur); //pushing current operator after popping higher priority operators
-        }    
+            push(ops, cur);
+        }
     }
+
     while(!check_underflow(ops))
     {
-        postfix[postind++] = pop(ops); //popping remaining operators into postfix expression
+        postfix[postind++] = pop(ops);
     }
     postfix[postind] = '\0';
-    liberate_stack(ops);
-    
+    liberate(ops);
     return postfix;
-    free(postfix);
 }
 
-
-
-int main(void)
-{
+int main() {
     char infix[100];
-    printf("Enter the infix expression: ");
-    scanf("%[^\n]", infix);
-    printf("The postfix expression is: %s\n", infix_to_postfix(infix));
+    printf("Enter an infix expression: ");
+    scanf("%s", infix);
+    char* postfix = infix_to_postfix(infix);
+    printf("Infix Expression: %s\n", infix);
+    printf("Postfix Expression: %s\n", postfix);
+    free(postfix);
+    return 0;
 }
 
 /*Output:
-Enter the infix expression: (a+b)^c/d-e*f
-The postfix expression is: ab+c^d/ef*-
+Enter an infix expression: (a+b)*c-d/e
+Infix Expression: (a+b)*c-d/e
+Postfix Expression: ab+c*de/-
 */

@@ -1,147 +1,75 @@
+#include "stackfuncs.h"
 #include<stdio.h>
 #include<stdlib.h>
-#include<malloc.h>
-#include<stdbool.h>
-#include<string.h>
 #include<ctype.h>
-#include<math.h>
+#include<string.h>
+#include<malloc.h>
 
-typedef struct {
-    char* ptr;
-    int top;
-    int max;
-}CSTACK;
-
-CSTACK* create_stack(int max)
+bool is_operand(char ops)
 {
-    CSTACK* st;
-    st = (CSTACK*)malloc(sizeof(CSTACK));
-    st->max = max;
-    st->top = -1;    
-    st->ptr = (char*)malloc(st->max*sizeof(char));
-    return st;
+    return isalnum(ops);
 }
 
-void liberate_stack(CSTACK* st)
+bool is_operator(char ops)
 {
-    free(st->ptr);
-    free(st);
+    return !isalnum(ops);
 }
 
-bool check_overflow(CSTACK* st)
+int ctoi(char operand)
 {
-    return (st->top == (st->max)-1);
+    return ((int)operand-48);
 }
 
-bool check_underflow(CSTACK* st)
+char itoc(int operand)
 {
-    return (st->top == -1);
+    return ((char)(operand+48));
 }
 
-void push(CSTACK* st, char item)
+int eval_postfix(char* postfix)
 {
-    if(check_overflow(st))
-    {
-        printf("Stack is full.");
-        exit(0);        
-    }
-    else
-    {        
-        st->ptr[++st->top] = item;
-    }
-}
-
-char pop(CSTACK* st)
-{
-    if(check_underflow(st)) 
-    {
-        printf("Stack is empty.");
-        exit(0);
-    }               
-    else
-    {
-        
-        return st->ptr[st->top--];
-    }
-}
-
-char peek(CSTACK* st)
-{
-    return st->ptr[st->top];
-}
-
-void disp_stack(CSTACK* st)
-{
-    for(int i = 0; i <= st->top; i++)
-    {
-        printf("%c ", st->ptr[i]);
-    }    
-}
-
-bool is_operand(char o)
-{
-    return isalnum(o);
-}
-
-bool is_operator(char op)
-{
-    return !isalnum(op);
-}
-
-int eval_postfix (char* postfix)
-{
-    CSTACK* eval = create_stack(200);
-    for(int i = 0; *(postfix+i)!= '\0'; i++)
+    STACK* opers = create(5);
+    for(int i = 0; *(postfix+i)!='\0'; i++)
     {
         char cur = *(postfix+i);
         if (is_operand(cur))
         {
-            push(eval, cur);
+            push(opers, cur);
         }
-        if (is_operator(cur))
+        else if (is_operator(cur))
         {
-            int o1 = (int)pop(eval);
-            int o2 = (int)pop(eval);
+            int oper2 = ctoi(pop(opers));
+            int oper1 = ctoi(pop(opers));
+
             switch (cur)
             {
-            case '+':
-            {
-                push(eval, o1+o2);
-                break;
-            }                
-            case '-':
-            {
-                push(eval, o1-o2);
-                break;
-            }
-            case '*':
-            {
-                push(eval, o1*o2);
-                break;
-            }
-            case '/':
-            {
-                push(eval, o1/o2);
-                break;
-            }
-            case '^':
-            {
-                push(eval, pow(o1, o2));
-                break;
-            }
-            default:
-                printf("Invalid character!");
-                exit(0);
+                case '+':
+                push(opers, itoc(oper1+oper2)); break;
+                case '-':
+                push(opers, itoc(oper1-oper2)); break;
+                case '*':
+                push(opers, itoc(oper1*oper2)); break;
+                case '/':
+                push(opers, itoc(oper1/oper2)); break;
             }
         }
     }
-    return (int)(pop(eval));
+    int result = ctoi(pop(opers));
+    liberate(opers);
+    return result;
 }
 
-int main(void)
-{
-    char* postfix;
-    printf("Enter postfix expression: ");
-    scanf("%[^\n]", postfix);
-    printf("Evaluation of postfix expression yields: %d. ", eval_postfix(postfix));
+int main() {
+    char postfix[100];
+    
+    // Input a postfix expression
+    printf("Enter a postfix expression: ");
+    scanf("%s", postfix);
+
+    // Evaluate the postfix expression
+    int result = eval_postfix(postfix);
+
+    // Display the result
+    printf("Result of postfix expression: %d\n", result);
+
+    return 0;
 }
