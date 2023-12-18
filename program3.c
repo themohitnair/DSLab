@@ -1,118 +1,161 @@
 #include<stdio.h>
-#include<stdlib.h>
 #include<malloc.h>
+#include<stdlib.h>
 #include<stdbool.h>
 
 typedef struct {
     char* ptr;
     int top;
-    int max;
-}CSTACK;
+    int max_size;
+} STACK;
 
-CSTACK* create_stack(int max)
+STACK* create(int max_size)
 {
-    CSTACK* st;
-    st = (CSTACK*)malloc(sizeof(CSTACK));
-    st->max = max;
-    st->top = -1;    
-    st->ptr = (char*)malloc(st->max*sizeof(char));
-    return st;
+    STACK* stack = (STACK*)malloc(sizeof(STACK));
+    stack->max_size = max_size;
+    stack->top = -1;
+    stack->ptr = (char*)malloc(stack->max_size*sizeof(char));
+    return stack;
+}
+ 
+bool check_overflow(STACK* stack)
+{
+    return (stack->top==(stack->max_size-1));    
 }
 
-void liberate_stack(CSTACK* st)
+bool check_underflow(STACK* stack)
 {
-    free(st->ptr);
-    free(st);
+    return (stack->top==-1);
 }
 
-bool check_overflow(CSTACK* st)
+void push(STACK* stack, char item)
 {
-    return (st->top == (st->max)-1);
-}
-
-bool check_underflow(CSTACK* st)
-{
-    return (st->top == -1);
-}
-
-void push(CSTACK* st, char item)
-{
-    if(check_overflow(st))
-    {
-        printf("Stack is full.");
-        exit(0);        
-    }
+    if(!check_overflow(stack))
+        stack->ptr[++stack->top] = item;
     else
-    {        
-        st->ptr[++st->top] = item;
+    {
+        printf("Limit exceeded. Stack size has been increased by one.");
+        stack->max_size += 1;
+        stack->ptr = (char*)realloc(stack->ptr, (stack->max_size)*sizeof(char));
     }
 }
 
-char pop(CSTACK* st)
+char pop(STACK* stack)
 {
-    if(check_underflow(st)) 
+    if(check_underflow(stack))
     {
-        printf("Stack is empty.");
+        printf("No items left in stack to pop.\n");
         exit(0);
-    }               
+    }        
     else
     {
-        
-        return st->ptr[st->top--];
+        return stack->ptr[stack->top--];
     }
 }
 
-char peek(CSTACK* st)
+char peek(STACK* stack)
 {
-    return st->ptr[st->top];
-}
-
-void disp_stack(CSTACK* st)
-{
-    for(int i = 0; i <= st->top; i++)
+    if(check_underflow(stack))
     {
-        printf("%c ", st->ptr[i]);
-    }    
+        printf("No items left in stack.\n");
+        exit(0);
+    }        
+    else
+        return stack->ptr[stack->top];
 }
 
-int main(void)
+void display(STACK* stack)
 {
-    int n, max;
-    CSTACK* stack;
-    printf("Enter the maximum size of the stack: ");
-    scanf("%d", &max);
-    getchar();
-    stack = create_stack(max);
-    printf("Enter the number of elements to be pushed into the stack: ");
+    if(check_underflow(stack))
+    {
+        printf("No items left in stack.\n");
+        exit(0);
+    }
+    else
+    {
+        for(int i = 0; i <= stack->top; i++)
+        {
+            printf("%c", stack->ptr[i]);
+        }        
+    }
+    
+}
+
+void liberate(STACK* stack)
+{
+    free(stack->ptr);
+    free(stack);
+}
+
+int main() 
+{
+    int n;
+    printf("Enter the size of the stack you want to create: ");
     scanf("%d", &n);
-    getchar();
-    printf("Enter the elements to be pushed into the stack: ");
-    char tmp = 'c';
-    for(int i = 0; i < n; i++)
-    {
-        scanf("%c", &tmp);
-        push(stack, tmp);
-    }
-    printf("The state of the stack is: ");
-    disp_stack(stack);
-    printf("\n");
+    STACK* myStack = create(n);
+    char input;
+    do {
+        printf("1. Push  2. Pop  3. Peek  4. Display  0. Exit\n");
+        printf("Enter your choice: ");
+        scanf(" %c", &input);
+        switch (input) {
+            case '1': {
+                char element;
+                printf("Enter the element to push: ");
+                scanf(" %c", &element);
+                push(myStack, element);
+                break;
+            }
+            case '2': 
+            {
+                char poppedElement = pop(myStack);
+                printf("Popped element: %c\n", poppedElement);
+                break;
+            }
+            case '3':
+                char peekedElement = peek(myStack);
+                printf("TOP element: %c\n", peekedElement);
+                break;
+            case '4':
+                printf("Stack content: ");
+                display(myStack);
+                printf("\n");
+                break;
+            case '0':
+                break;
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    } 
+    while (input != '0');
+    liberate(myStack);
 
-    printf("Enter the number of elements to be popped: ");
-    scanf("%d", &n);
-    printf("The popped elements are: ");
-    for(int i = 0; i < n; i++)
-    {
-        printf("%c ", pop(stack));
-    }
-    printf("\n");
-    liberate_stack(stack);
+    return 0;
 }
 
 /*Output:
-Enter the maximum size of the stack: 10     
-Enter the number of elements to be pushed into the stack: 7
-Enter the elements to be pushed into the stack: abcd:e,      
-The state of the stack is: a b c d : e , 
-Enter the number of elements to be popped: 2
-The popped elements are: , e 
+Enter the size of the stack you want to create: 5
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 1
+Enter the element to push: a
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 1
+Enter the element to push: b
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 1
+Enter the element to push: c
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 1
+Enter the element to push: d
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 2
+Popped element: d
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 3
+TOP element: c
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 4
+Stack content: abc
+1. Push  2. Pop  3. Peek  4. Display  0. Exit
+Enter your choice: 0
 */
