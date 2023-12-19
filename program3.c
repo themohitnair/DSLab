@@ -92,8 +92,8 @@ int main()
     scanf("%d", &n);
     STACK* q = create(n);
     char input;
+    printf("1. Push  2. Pop  3. Peek  4. Display  0. Exit\n");
     do {
-        printf("1. Push  2. Pop  3. Peek  4. Display  0. Exit\n");
         printf("Enter your choice: ");
         scanf(" %c", &input);
         switch (input) {
@@ -115,7 +115,6 @@ int main()
                 printf("TOP element: %c\n", peekedElement);
                 break;
             case '4':
-                printf("Stack content: ");
                 display(q);
                 printf("\n");
                 break;
@@ -136,24 +135,17 @@ Enter the size of the stack you want to create: 5
 1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 1
 Enter the element to push: a
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 1
 Enter the element to push: b
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 1
 Enter the element to push: c
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 1
 Enter the element to push: d
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 2
 Popped element: d
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 3
 TOP element: c
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
 Enter your choice: 4
-Stack content: abc
-1. Push  2. Pop  3. Peek  4. Display  0. Exit
+abc
 Enter your choice: 0
 */
