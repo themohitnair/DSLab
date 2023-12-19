@@ -90,7 +90,7 @@ int main()
     int n;
     printf("Enter the size of the stack you want to create: ");
     scanf("%d", &n);
-    STACK* myStack = create(n);
+    STACK* q = create(n);
     char input;
     do {
         printf("1. Push  2. Pop  3. Peek  4. Display  0. Exit\n");
@@ -101,22 +101,22 @@ int main()
                 char element;
                 printf("Enter the element to push: ");
                 scanf(" %c", &element);
-                push(myStack, element);
+                push(q, element);
                 break;
             }
             case '2': 
             {
-                char poppedElement = pop(myStack);
+                char poppedElement = pop(q);
                 printf("Popped element: %c\n", poppedElement);
                 break;
             }
             case '3':
-                char peekedElement = peek(myStack);
+                char peekedElement = peek(q);
                 printf("TOP element: %c\n", peekedElement);
                 break;
             case '4':
                 printf("Stack content: ");
-                display(myStack);
+                display(q);
                 printf("\n");
                 break;
             case '0':
@@ -126,7 +126,7 @@ int main()
         }
     } 
     while (input != '0');
-    liberate(myStack);
+    liberate(q);
 
     return 0;
 }
