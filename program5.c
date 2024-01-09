@@ -1,75 +1,169 @@
-#include "stackfuncs.h"
 #include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<string.h>
 #include<malloc.h>
+#include<string.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<ctype.h>
 
-bool is_operand(char ops)
+typedef struct {
+    char* s;
+    int top;
+    int max_size;
+} STACK;
+
+STACK* create(int max)
 {
-    return isalnum(ops);
+    STACK* stack = (STACK*)malloc(sizeof(STACK));
+    stack->max_size = max;
+    stack->s = (char*)malloc(stack->max_size*sizeof(char));
+    stack->top = -1;
+    return stack;
 }
 
-bool is_operator(char ops)
+bool underflow(STACK* stack)
 {
-    return !isalnum(ops);
+    return (stack->top == -1);
 }
 
-int ctoi(char operand)
+bool overflow(STACK* stack)
 {
-    return ((int)operand-48);
+    return (stack->top == stack->max_size-1);
 }
 
-char itoc(int operand)
+void push(STACK* stack, char item)
 {
-    return ((char)(operand+48));
-}
-
-int eval_postfix(char* postfix)
-{
-    STACK* opers = create(5);
-    for(int i = 0; *(postfix+i)!='\0'; i++)
+    if (overflow(stack))
     {
-        char cur = *(postfix+i);
-        if (is_operand(cur))
+        printf("Stack is full.\n");
+        exit(0);
+    }
+    stack->s[++stack->top] = item;
+}
+
+char pop(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    return (stack->s[stack->top--]);
+}
+
+char peek(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    return (stack->s[stack->top]);
+}
+
+void disp(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    for(int i = 0; i <= stack->top; i++)
+    {
+        printf("%c",stack->s[i]);
+    }
+}
+
+void liberate(STACK* stack)
+{
+    free(stack->s);
+    free(stack);
+}
+
+int prec(char ops)
+{
+    switch (ops)
+    {
+        case '*':
+        case '/':
+        case '%': return 2;
+        case '+':
+        case '-': return 1;
+        default: return 0;
+    }
+}
+
+bool operand(char ops)
+{
+    return (isalnum(ops));
+}
+
+bool operator(char ops)
+{
+    return !operand(ops);
+}
+
+int ctoi(char c)
+{
+    return (int)(c-'0');
+}
+
+char itoc(int c)
+{
+    return (char)(c+48);
+}
+
+int eval(char* postfix)
+{
+    STACK* opers = create(25);
+    for(int i = 0; postfix[i]!='\0'; i++)
+    {
+        char cur = postfix[i];
+        if(operand(cur))
         {
             push(opers, cur);
         }
-        else if (is_operator(cur))
+        if(operator(cur))
         {
-            int oper2 = ctoi(pop(opers));
-            int oper1 = ctoi(pop(opers));
-
+            int op2 = ctoi(pop(opers));
+            int op1 = ctoi(pop(opers));
             switch (cur)
             {
                 case '+':
-                push(opers, itoc(oper1+oper2)); break;
+                    push(opers, itoc(op1+op2));
+                    break;
                 case '-':
-                push(opers, itoc(oper1-oper2)); break;
+                    push(opers, itoc(op1-op2));
+                    break;
                 case '*':
-                push(opers, itoc(oper1*oper2)); break;
+                    push(opers, itoc(op1*op2));
+                    break;
                 case '/':
-                push(opers, itoc(oper1/oper2)); break;
+                    push(opers, itoc(op1/op2));
+                    break;
+                case '%':
+                    push(opers, itoc(op1%op2));
+                    break;
+                default:
+                    printf("Invalid operator. ");
+                    exit(0);                 
             }
         }
     }
-    int result = ctoi(pop(opers));
-    liberate(opers);
-    return result;
+    return ctoi(pop(opers));
 }
 
-int main() {
-    char postfix[100];
-    
-    // Input a postfix expression
+int main() 
+{
+    char postfix[100];    
     printf("Enter a postfix expression: ");
     scanf("%s", postfix);
-
-    // Evaluate the postfix expression
-    int result = eval_postfix(postfix);
-
-    // Display the result
+    int result = eval(postfix);
     printf("Result of postfix expression: %d\n", result);
 
     return 0;
 }
+
+/*Output:
+Enter a postfix expression: 16*63/-4+2/
+Result of postfix expression: 4
+*/

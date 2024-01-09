@@ -1,81 +1,155 @@
-#include "stackfuncs.h"
 #include<stdio.h>
-#include<stdlib.h>
 #include<malloc.h>
-#include<ctype.h>
 #include<string.h>
+#include<stdlib.h>
 #include<stdbool.h>
+#include<ctype.h>
+
+typedef struct {
+    char* s;
+    int top;
+    int max_size;
+} STACK;
+
+STACK* create(int max)
+{
+    STACK* stack = (STACK*)malloc(sizeof(STACK));
+    stack->max_size = max;
+    stack->s = (char*)malloc(stack->max_size*sizeof(char));
+    stack->top = -1;
+    return stack;
+}
+
+bool underflow(STACK* stack)
+{
+    return (stack->top == -1);
+}
+
+bool overflow(STACK* stack)
+{
+    return (stack->top == stack->max_size-1);
+}
+
+void push(STACK* stack, char item)
+{
+    if (overflow(stack))
+    {
+        printf("Stack is full.\n");
+        exit(0);
+    }
+    stack->s[++stack->top] = item;
+}
+
+char pop(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    return (stack->s[stack->top--]);
+}
+
+char peek(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    return (stack->s[stack->top]);
+}
+
+void disp(STACK* stack)
+{
+    if (underflow(stack))
+    {
+        printf("Stack is empty.\n");
+        exit(0);
+    }
+    for(int i = 0; i <= stack->top; i++)
+    {
+        printf("%c",stack->s[i]);
+    }
+}
+
+void liberate(STACK* stack)
+{
+    free(stack->s);
+    free(stack);
+}
 
 int prec(char ops)
 {
     switch (ops)
     {
         case '*':
-        case '/': return 2;
+        case '/':
+        case '%': return 2;
         case '+':
-        case '-': return 1;    
+        case '-': return 1;
         default: return 0;
     }
 }
 
-bool is_operand(char ops)
+bool operand(char ops)
 {
-    return isalnum(ops);
+    return (isalnum(ops));
 }
 
-bool is_operator(char ops)
+bool operator(char ops)
 {
-    return !isalnum(ops);
+    return !operand(ops);
 }
 
-char* infix_to_postfix(char* infix)
+char* conv_postfix(char* infix)
 {
-    STACK* ops = create(10);
     char* postfix = (char*)malloc((strlen(infix)+1)*sizeof(char));
-    int postind = 0;
-    for(int i=0;*(infix+i)!='\0';i++)
+    int ind = 0;
+    STACK* ops = create(20);
+    for(int i = 0; infix[i]!='\0'; i++)
     {
         char cur = infix[i];
-        if (is_operand(cur))        
+        if(operand(cur))
         {
-            postfix[postind++] = cur;
+            postfix[ind++] = cur;
         }
-        else if(cur=='(')
+        else if (cur == '(')
         {
             push(ops, cur);
         }
-        else if(cur==')')
+        else if (cur == ')')
         {
-            while(!check_underflow(ops) && peek(ops)!='(')
+            while(!underflow(ops) && peek(ops)!='(')
             {
-                postfix[postind++] = pop(ops);
+                postfix[ind++] = pop(ops);
             }
-            char garbage = pop(ops);
+            char g = pop(ops);
         }
-        else if(is_operator(cur))
+        else if(operator(cur))
         {
-            while((!check_underflow(ops)) && (prec(cur)<=prec(peek(ops)) && (peek(ops)!='(')))
+            while(!underflow(ops) && prec(cur)<=prec(peek(ops)))
             {
-                postfix[postind++] = pop(ops);
+                postfix[ind++] = pop(ops);
             }
             push(ops, cur);
         }
     }
-
-    while(!check_underflow(ops))
+    while (!underflow(ops))
     {
-        postfix[postind++] = pop(ops);
+        postfix[ind++] = pop(ops);
     }
-    postfix[postind] = '\0';
+    postfix[ind] = '\0';
     liberate(ops);
     return postfix;
 }
 
-int main() {
+int main() 
+{
     char infix[100];
     printf("Enter an infix expression: ");
     scanf("%s", infix);
-    char* postfix = infix_to_postfix(infix);
+    char* postfix = conv_postfix(infix);
     printf("Infix Expression: %s\n", infix);
     printf("Postfix Expression: %s\n", postfix);
     free(postfix);
@@ -83,7 +157,7 @@ int main() {
 }
 
 /*Output:
-Enter an infix expression: (a+b)*c-d/e
-Infix Expression: (a+b)*c-d/e
-Postfix Expression: ab+c*de/-
+Enter an infix expression: (a+b)*c-d/(e-f)+R%K
+Infix Expression: (a+b)*c-d/(e-f)+R%K
+Postfix Expression: ab+c*def-/-RK%+
 */
