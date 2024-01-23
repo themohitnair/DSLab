@@ -1,35 +1,35 @@
 # Data Structures and Algorithms in C
 
-This repository contains C programs demonstrating various data structures and algorithms. Each program is accompanied by a brief explanation.
+Welcome to the "Data Structures and Algorithms in C" repository! This collection of C programs is designed to help you understand and implement various data structures and algorithms. Each program comes with detailed explanations to assist your learning journey.
 
 ## Programs
 
-1. **Student Information**
-   - Reads and calculates details of multiple students using structures and dynamic memory allocation.
+1. **Student Information using Structures** `program1.c`
+   - This program reads and calculates details of multiple students using structures and dynamic memory allocation.
 
-2. **Dynamic Array Resizing**
+2. **Dynamic Array Resizing** `program2.c`
    - Demonstrates dynamic memory allocation and reallocation for an integer array.
 
-3. **Stack Implementation**
-   - Implements a stack with push, pop, peek, and display operations.
+3. **Stack Implementation** `program3.c`
+   - Implements a stack with push, pop, peek, and display operations. Includes a program illustrating forward and backward surfing in a web browser using a stack (Array implementation), with appropriate exception messages.
 
-4. **Infix to Postfix Conversion**
-   - Converts an infix expression to postfix using a stack.
+4. **Infix to Postfix Conversion** `program4.c`
+   - Converts a given valid parenthesized infix arithmetic expression to postfix using a stack data structure.
 
-5. **Postfix Expression Evaluation**
-   - Evaluates a postfix expression using a stack.
+5. **Postfix Expression Evaluation** `program5.c`
+   - Evaluates a valid postfix expression using a stack. Assumes the postfix expression consists of non-negative single-digit operands and binary operators (+, -, *, /).
 
-6. **Queue Implementation**
-   - Implements a queue with enqueue, dequeue, and display operations.
+6. **Queue Implementation** `program6.c`
+   - Simulates a call center phone system using a queue data structure. Provides options to add and remove phone calls in the order of their arrival for service.
 
-7. **Circular Queue Implementation**
-   - Implements a circular queue with enqueue, dequeue, and display operations.
+7. **Circular Queue Implementation** `program7.c`
+   - Demonstrates round-robin processor scheduling using a circular queue (array implementation) with options to add, remove, and display elements.
 
-8. **Singly Linked List Implementation**
-   - The program showcases a singly linked list with operations such as insertion at the head, tail, and a specific position, deletion from the head, tail, and a specific position, searching for an element, and display.
+8. **Singly Linked List Implementation** `program8.c`
+   - Illustrates memory allocation to files based on their size using a singly linked list. Supports operations such as inserting a node, deleting a node, and displaying the list.
 
-9. **Doubly Linked List Implementation**
-   - This program presents the implementation of a doubly linked list with operations including insertion at the head and tail, deletion from the head and tail, display, and exit.
+9. **Doubly Linked List Implementation** `program9.c`
+   - Extends memory allocation to files based on their size using a doubly linked list. Supports operations such as inserting a node, deleting a node, and displaying the list.
 
 ## How to Run
 
@@ -37,6 +37,6 @@ This repository contains C programs demonstrating various data structures and al
 2. Compile the C programs using a C compiler (e.g., `gcc program_name.c -o program_name`).
 3. Run the compiled executable (e.g., `./program_name`).
 
-Feel free to explore each program to understand the concepts and use them as reference material for learning data structures and algorithms in C.
+Feel free to explore each program to grasp the concepts and use them as reference material for learning data structures and algorithms in C.
 
-If you find any issues or have suggestions, please feel free to open an issue or create a pull request.
+If you encounter any issues or have suggestions, please open an issue or create a pull request. Your contributions are highly appreciated!
