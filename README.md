@@ -1,6 +1,6 @@
 # Data Structures and Algorithms in C
 
-Welcome to the "Data Structures and Algorithms in C" repository! This collection of C programs is designed to help you understand and implement various data structures and algorithms. Each program comes with detailed explanations to assist your learning journey.
+A repository consisting of the Data Strcutures Laboratory programs in C. All programs in this repository correspond to the syllabus of ISL36, from the Department of Information Science Engineering, Ramaiah Institute of Technology, Bangalore.
 
 ## Programs
 
