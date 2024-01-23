@@ -25,8 +25,11 @@ This repository contains C programs demonstrating various data structures and al
 7. **Circular Queue Implementation**
    - Implements a circular queue with enqueue, dequeue, and display operations.
 
-8. **Linked List Implementation**
-   - Implements a linked list with insert and delete operations at the head/tail.
+8. **Singly Linked List Implementation**
+   - The program showcases a singly linked list with operations such as insertion at the head, tail, and a specific position, deletion from the head, tail, and a specific position, searching for an element, and display.
+
+9. **Doubly Linked List Implementation**
+   - This program presents the implementation of a doubly linked list with operations including insertion at the head and tail, deletion from the head and tail, display, and exit.
 
 ## How to Run
 
