@@ -87,8 +87,9 @@ void liberate(struct node* head)
     struct node* ptr = head;
     while(ptr!=head)
     {
+        struct node* memo = ptr->next;
         free(ptr);
-        ptr = ptr->next;
+        ptr = memo;
     }
     free(head);
 }
@@ -130,6 +131,7 @@ int main(void)
             printf("Invalid choice. Please choose again.");
         }
     }
+    liberate(head);
 }
 
 /*Output:

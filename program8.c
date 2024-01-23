@@ -238,7 +238,13 @@ int get_pos()
 
 void liberate(struct node* head)
 {
-    
+    struct node* ptr = head;
+    while(ptr!=NULL)    
+    {
+        struct node* memo = ptr->link;
+        free(ptr);
+        ptr = memo;
+    }
 }
 
 int main(void)
@@ -291,6 +297,7 @@ int main(void)
             printf("Invalid choice. Please choose again.");
         }
     }
+    liberate(head);
 }
 
 /*Output:
