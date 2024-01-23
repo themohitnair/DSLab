@@ -1,143 +1,135 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
 #include<malloc.h>
 #include<stdbool.h>
+#include<string.h>
 
 typedef struct {
-    int* ptr;
-    int front;
-    int rear;
+    int f, r;
+    char* q;
     int max_size;
-} QUEUE;
+}QUEUE;
 
-QUEUE* create(int max_size)
-{    
+QUEUE* create()
+{
     QUEUE* queue = (QUEUE*)malloc(sizeof(QUEUE));
-    queue->max_size = max_size;
-    queue->ptr = (int*)malloc((queue->max_size)*sizeof(int));
-    queue->front = 0;
-    queue->rear = -1;
+    queue->f = 0;
+    queue->r = -1;
+    queue->max_size = 1;
+    queue->q = (char*)malloc(queue->max_size*sizeof(char));
     return queue;
 }
 
-bool is_full(QUEUE* queue)
+bool full(QUEUE* queue)
 {
-    return (queue->rear == queue->max_size-1);
+    return queue->r == queue->max_size-1;
 }
 
-bool is_empty(QUEUE* queue)
+bool empty(QUEUE* queue)
 {
-    return (queue->rear < queue->front);
+    return queue->f > queue->r;
 }
 
-void enqueue(QUEUE* queue, int item)
+void enqueue(QUEUE* queue, char item)
 {
-    if(is_full(queue))
+    if (full(queue))
     {
-        queue->max_size++;
-        queue->ptr = (int*)realloc(queue->ptr, (queue->max_size)*sizeof(int));
+        queue->q = (char*)realloc(queue->q, (++queue->max_size)*sizeof(char));
     }
-    queue->ptr[++queue->rear] = item;
+    queue->q[++queue->r] = item;
 }
 
-int dequeue(QUEUE* queue)
+char dequeue(QUEUE* queue)
 {
-    if(is_empty(queue))
+    if (empty(queue))
     {
-        printf("The queue has no items left to delete.\n");
+        printf("Queue is empty. No items left to be deleted.\n");
         exit(0);
     }
-    else
-    return queue->ptr[queue->front++];
+    return queue->q[queue->f++];
 }
 
 void display(QUEUE* queue)
 {
-    if(is_empty(queue))
+    if(empty(queue))
     {
-        printf("No items left to display.");
+        printf("Queue is empty. No items left to be displayed.\n");
+        exit(0);
     }
-    else
+    printf("The elements of the queue are: ");
+    for(int i = queue->f; i<=queue->r; i++)
     {
-        for(int i = queue->front; i <= queue->rear; i++)
-        {
-            printf(" %d", queue->ptr[i]);
-        }
+        printf("%c",queue->q[i]);
     }
 }
 
 void liberate(QUEUE* queue)
 {
-    free(queue->ptr);
+    free(queue->q);
     free(queue);
 }
 
-int main() 
+int main(void)
 {
-    int n;
-    printf("Enter the size of the queue you want to create: ");
-    scanf("%d", &n);
-    QUEUE* q = create(n);
+    QUEUE* queue = create();
+    char item;
     int choice;
-    do {
-        printf("1. Enqueue  2. Dequeue  3. Display  0. Exit\n");
-        printf("Enter your choice: ");
+    printf("1. Enqueue\n2. Dequeue\n3. Display\n4. Exit\n");
+    while(true)    
+    {
+        printf("\nEnter your choice: ");
         scanf("%d", &choice);
-        switch (choice) {
-            case 1: 
-            {
-                int element;
-                printf("Enter the element: ");
-                scanf("%d", &element);
-                enqueue(q, element);
-                break;
-            }
-            case 2: 
-            {
-                int dequeuedElement = dequeue(q);
-                printf("Dequeued element: %d\n", dequeuedElement);
-                break;
-            }
+        switch(choice)
+        {
+            case 1:
+            printf("Enter the character to be inserted into the queue: ");
+            scanf(" %c", &item);
+            enqueue(queue, item);
+            break;
+            case 2:
+            printf("Dequeued element: %c",dequeue(queue));
+            break;
             case 3:
-            {
-                display(q);
-                printf("\n");
-                break;
-            }
-            case 0:
-                break;
+            display(queue);
+            break;
+            case 4:
+            liberate(queue);
+            exit(0);
             default:
-                printf("Invalid choice. Please enter a valid option.\n");
+            printf("Invalid choice. Please choose again.\n");
         }
-    } while (choice != 0);
-
-    liberate(q);
-    return 0;
+    }
+    liberate(queue);
 }
 
 /*Output:
-Enter the size of the queue you want to create: 5
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+1. Enqueue
+2. Dequeue
+3. Display
+4. Exit
+
 Enter your choice: 1
-Enter the element: 12
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+Enter the character to be inserted into the queue: a
+
 Enter your choice: 1
-Enter the element: 14
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+Enter the character to be inserted into the queue: b
+
 Enter your choice: 1
-Enter the element: 17
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+Enter the character to be inserted into the queue: c
+
 Enter your choice: 1
-Enter the element: 19
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+Enter the character to be inserted into the queue: d
+
+Enter your choice: 1
+Enter the character to be inserted into the queue: e
+
 Enter your choice: 3
- 12 14 17 19
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+The elements of the queue are: abcde
 Enter your choice: 2
-Dequeued element: 12
-1. Enqueue  2. Dequeue  3. Display  0. Exit
+Dequeued element: a
+Enter your choice: 2
+Dequeued element: b
 Enter your choice: 3
- 14 17 19
-1. Enqueue  2. Dequeue  3. Display  0. Exit
-Enter your choice: 0*/
+The elements of the queue are: cde
+Enter your choice: 4
+*/
