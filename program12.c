@@ -60,17 +60,6 @@ struct node* search (struct node* root, int key) {
     }
 }
 
-void delete(struct node* root, int item) {
-    if(root->data == item || root == NULL) {
-        root = NULL;
-    }
-    else {
-        if (item < root->data) {
-            delete(root)
-        }
-    }
-}
-
 void inorder(struct node* root) {
     if(empty(root)) {
         return;
@@ -104,7 +93,7 @@ int main(void) {
     printf("Enter the value of the root node: ");
     scanf("%d", &r);
     root = create(r);
-    printf("1. Insert node\n2. Delete node\n3. Search node\n4. Inorder Traversal\n5. Preorder Traversal\n6. Postorder Traversal\n7. Exit\n");
+    printf("1. Insert node\n2. Search node\n4. Inorder Traversal\n5. Preorder Traversal\n6. Postorder Traversal\n7. Exit\n");
 
     while(true) {
         printf("Enter your choice: ");
@@ -117,12 +106,6 @@ int main(void) {
             break;
 
             case 2:
-            printf("Enter the item: ");
-            scanf("%d", &item);
-            // delete(root, item);
-            break;
-
-            case 3:
             printf("Enter the item: ");
             scanf("%d", &item);
             if(search(root, item) == NULL) {
@@ -157,23 +140,39 @@ int main(void) {
         }
     }
 
-    // root = create(10);
-    // insert(root, 5);
-    // insert(root, 15);
-    // insert(root, 3);
-    // insert(root, 7);
-    // insert(root, 13);
-    // insert(root, 17);
-
-    // printf("Inorder Traversal: ");
-    // inorder(root);
-    // printf("\n");
-    // printf("Preorder Traversal: ");
-    // preorder(root);
-    // printf("\n");
-    // printf("Postorder Traversal: ");
-    // postorder(root);
-    // printf("\n");
-
     liberate(root);
 }
+
+/*Output:
+Enter the value of the root node: 5
+1. Insert node
+2. Search node
+4. Inorder Traversal
+5. Preorder Traversal
+6. Postorder Traversal
+7. Exit
+Enter your choice: 1
+Enter the item: 3
+Enter your choice: 1
+Enter the item: 7
+Enter your choice: 1
+Enter the item: 2
+Enter your choice: 1
+Enter the item: 4
+Enter your choice: 1
+Enter the item: 6
+Enter your choice: 1
+Enter the item: 8
+Enter your choice: 2
+Enter the item: 3
+Item found! 
+Enter your choice: 2   
+Enter the item: 10
+Item not found! 
+Enter your choice: 4
+ 2 3 4 5 6 7 8
+Enter your choice: 5
+ 5 3 2 4 7 6 8
+Enter your choice: 6
+ 2 4 3 6 8 7 5
+Enter your choice: 7*/
