@@ -37,6 +37,9 @@ A repository containing Data Structures Laboratory programs in C corresponding t
 11. **Queue Operations with Enqueue and Dequeue** (`program11.c`)
    Implements basic queue operations with `enqueue` and `dequeue`. Extends the menu in the main function to include enqueueing and dequeuing.
 
+12. **Binary Search Tree Implementation** (`program12.c`)
+   Implements a binary search tree (BST) in C with various operations including insertion, searching, and traversals. The program allows users to interactively perform operations such as inserting nodes, searching for a specific node, and traversing the tree in different orders (inorder, preorder, postorder).
+
 ## How to Run
 
 1. Clone the repository.
