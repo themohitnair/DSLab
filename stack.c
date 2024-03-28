@@ -95,6 +95,7 @@ int main(void) {
                 break;
             case 5:
                 printf("\nExiting...");
+                liberate(stack);
                 exit(0);
             default:
                 printf("\nInvalid choice. Try again...\n");
