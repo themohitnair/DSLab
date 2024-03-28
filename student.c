@@ -21,13 +21,13 @@ STUDENT* alloc_student(int n) {
 
 STUDENT* init_student(STUDENT* student, int n) {
     for(int i = 0; i < n; i++) {
-        printf("Enter the name of the student %d: ", i);
+        printf("Enter the name of the student %d: ", i+1);
         scanf(" %[^\n]", (student+i)->name);
-        printf("Enter the USN of the student %d: ", i);
+        printf("Enter the USN of the student %d: ", i+1);
         scanf(" %[^\n]", (student+i)->usn);
-        printf("Enter the age of the student %d: ", i);
+        printf("Enter the age of the student %d: ", i+1);
         scanf("%d", &(student+i)->age);
-        printf("Enter student %d's CGPA: ", i);
+        printf("Enter student %d's CGPA: ", i+1);
         scanf("%f", &(student+i)->cgpa);
         printf("\n");
     }
@@ -37,7 +37,7 @@ STUDENT* init_student(STUDENT* student, int n) {
 void disp_student(STUDENT* student, int n, float cgpa) {
     for(int i = 0; i < n; i++) {
         if((student+i)->cgpa >= cgpa) {
-            printf("#####-STUDENT %d-#####\n", i);
+            printf("#####-STUDENT %d-#####\n", i+1);
             printf("Name: %s\n", (student+i)->name);
             printf("USN: %s\n", (student+i)->usn);
             printf("Age: %d\n", (student+i)->age);
